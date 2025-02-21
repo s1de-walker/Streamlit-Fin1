@@ -1,6 +1,8 @@
 # Factor Performance Tracker
 *First Finance streamlit app*
 
+<img src="sc/FPTapp.JPG" alt="Description" width="800">
+
 ### This is an app to track various factors in the US markets
 
 You can select the date range and factors to analyze from the sidebar<br/>
