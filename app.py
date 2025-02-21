@@ -3,23 +3,42 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime, timedelta
 
-# Sidebar for Date Selection
-st.sidebar.header("Select Date Range")
-end_date = st.sidebar.date_input("End Date", datetime.today())
-start_date = st.sidebar.date_input("Start Date", datetime.today() - timedelta(days=365))
+# Streamlit UI
+st.title("Factor Performance Tracker")
+st.divider()
 
-# Convert dates to string format for yfinance
-start_date = start_date.strftime('%Y-%m-%d')
-end_date = end_date.strftime('%Y-%m-%d')
+st.markdown("_📌 :grey[Select the **Date range** and **Factors** from the] sidebar_")
 
-# Define factor ETFs
-factors = {
-    "Quality": "QUAL",
-    "Value": "VLUE",
-    "Growth": "IWF",
-    "Min Volatility": "USMV",
-    "S&P500": "SPY"
-}
+
+# Sidebar for date and factor selection
+with st.sidebar:
+    st.header("⚙️ Settings")
+
+    st.write("")
+    st.write("")
+    
+    # Date selection
+    st.subheader("📅 Select Date Range")
+    start_date = st.date_input("Start Date", datetime.today() - timedelta(days=365))
+    end_date = st.date_input("End Date", datetime.today())
+
+    # Convert dates to string format for yfinance
+    start_date = start_date.strftime('%Y-%m-%d')
+    end_date = end_date.strftime('%Y-%m-%d')
+
+    st.write("")
+    st.write("")
+
+    # Factor selection
+    st.subheader("📊 Select Factors")
+    factors = {
+        "Quality": "QUAL",
+        "Value": "VLUE",
+        "Growth": "IWF",
+        "Min Volatility": "USMV",
+        "S&P500": "SPY"
+    }
+    selected_factors = st.multiselect("Choose factors:", factors.keys(), default=factors.keys())
 
 # Fetch data
 data = yf.download(list(factors.values()), start=start_date, end=end_date)['Close']
@@ -27,11 +46,9 @@ data = yf.download(list(factors.values()), start=start_date, end=end_date)['Clos
 # Calculate compounded returns
 returns = data.pct_change().add(1).cumprod() - 1
 
-# Streamlit UI
-st.title("Factor Performance Tracker")
+st.write("")
+st.write("")
 
-# Multi-select for user choice
-selected_factors = st.multiselect("Select factors to view:", factors.keys(), default=factors.keys())
 
 # Plot performance chart
 if selected_factors:
@@ -57,7 +74,7 @@ reverse_factors = {v: k for k, v in factors.items()}
 
 
 if not filtered_summary_stats.empty:
-    st.subheader("📌 Factor Summary")
+    st.subheader("Factor Summary")
 
     # Extracting best performers
     best_performer = filtered_summary_stats.loc["Total Return (%)"].idxmax()
