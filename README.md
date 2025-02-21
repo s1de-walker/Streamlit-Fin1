@@ -19,3 +19,6 @@ You can select the date range and factors to analyze from the sidebar<br/>
 ```cmd
 pip install -r requirements.txt
 ```
+
+
+##### [LinkedIn](https://www.linkedin.com/in/sujay-bhaumik-d12/) | s1dewalker23@gmail.com | [Research Works](https://github.com/s1dewalker/Research-Works)
