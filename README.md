@@ -13,12 +13,11 @@ You can select the date range and factors to analyze from the sidebar<br/>
 #### Check out the app @ [streamlit.app](https://app-fin1-hawpmehbdhznzv4ojicjz7.streamlit.app/)
 
 # 
-<br/>
 
 ##### In order to run certain libraries, install them in the project folder with: <br/>
 ```cmd
 pip install -r requirements.txt
 ```
+<BR/><BR/>
 
-
-##### [LinkedIn](https://www.linkedin.com/in/sujay-bhaumik-d12/) | s1dewalker23@gmail.com | [Research Works](https://github.com/s1dewalker/Research-Works)
+###### [LinkedIn](https://www.linkedin.com/in/sujay-bhaumik-d12/) | s1dewalker23@gmail.com | [Research Works](https://github.com/s1dewalker/Research-Works)
