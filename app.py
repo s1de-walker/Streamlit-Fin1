@@ -8,6 +8,8 @@ st.title("Factor Performance Tracker")
 st.divider()
 
 # 🗓️ Date Selection (Side-by-side)
+st.markdown("### Select Time period for analysis")
+
 col1, col2 = st.columns(2)
 
 with col1:
@@ -25,10 +27,12 @@ st.divider()
 # 📊 Factor Selection
 st.markdown("### Select Factors")
 st.markdown("""
-- **🏆 Quality (QUAL)** – Invests in financially strong companies that are profitable and stable.  
-- **💰 Value (VLUE)** – Focuses on stocks that are "on sale" compared to their true worth.  
-- **🚀 Growth (IWF)** – Picks companies expected to grow fast, even if they are expensive now.  
-- **🛡️ Min Volatility (USMV)** – Chooses stocks that move less up and down, making investing smoother.  
+- **🏆 Quality (QUAL)** – Targets stocks with high ROE, stable earnings, and low debt.
+- **💰 Value (VLUE)** – Invests in undervalued companies based on earnings & book value.
+- **🌱 Growth (IWF)** – Picks companies expected to grow fast, even if they are expensive now.  
+- **🛡️ Min Volatility (USMV)** – Selects stocks with historically lower risk & volatility.  
+- **🚀 Momentum (MTUM)** – Focuses on stocks with strong recent price performance.
+- **🔍 Size (SIZE)** – Prefers smaller-cap stocks for higher growth potential.
 """)
 
 factors = {
@@ -36,6 +40,8 @@ factors = {
     "Value": "VLUE",
     "Growth": "IWF",
     "Min Volatility": "USMV",
+    "Momentum": "MTUM",
+    "Size": "SIZE",
     "S&P500": "SPY"
 }
 selected_factors = st.multiselect("Choose factors:", factors.keys(), default=factors.keys())
