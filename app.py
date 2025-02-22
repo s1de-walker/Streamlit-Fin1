@@ -102,27 +102,26 @@ if not filtered_summary_stats.empty:
     col1.metric(
         label="🚀 Highest Return Factor", 
         value=f"{reverse_factors.get(best_performer, best_performer)}", 
-        delta=f"{best_performer_value:.2f}%"
+        delta=f"{best_performer_value:.0f}%"
     )
 
     col2.metric(
         label="⚡ Most Volatile Factor", 
         value=f"{reverse_factors.get(most_volatile, most_volatile)}", 
-        delta=f"{most_volatile_value:.2f}%"
+        delta=f"{most_volatile_value:.0f}%"
     )
 
     col3.metric(
         label="🎯 Best Sharpe Ratio", 
         value=f"{reverse_factors.get(best_sharpe, best_sharpe)}", 
-        delta=f"{best_sharpe_value:.2f}"
+        delta=f"{best_sharpe_value:.1f}"
     )
 
 st.write("")
 st.write("")
 st.write("")
 
-# Show summary stats
-st.table(filtered_summary_stats.style.format("{:.2f}"))
+st.table(filtered_summary_stats.style.format("{:.1f}"))
 
 st.write("")
 st.write("")
@@ -130,6 +129,9 @@ st.write("")
 
 # Display correlation matrix
 # Heatmap for Factor Correlations
-st.subheader("Factor Correlation Heatmap")
+st.subheader("Factor Correlation")
 
-st.table(returns[[factors[f] for f in selected_factors]].corr().round(2))
+correlation_matrix = returns[[factors[f] for f in selected_factors]].corr().round(2)
+
+# Format to ensure exactly 2 decimal places
+st.dataframe(correlation_matrix.style.format("{:.2f}"))
