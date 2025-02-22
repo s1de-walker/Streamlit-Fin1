@@ -7,38 +7,40 @@ from datetime import datetime, timedelta
 st.title("Factor Performance Tracker")
 st.divider()
 
-st.markdown("_📌 :grey[Select the **Date range** and **Factors** from the] sidebar_")
+# 🗓️ Date Selection (Side-by-side)
+col1, col2 = st.columns(2)
 
-
-# Sidebar for date and factor selection
-with st.sidebar:
-    st.header("⚙️ Settings")
-
-    st.write("")
-    st.write("")
-    
-    # Date selection
-    st.subheader("📅 Select Date Range")
+with col1:
     start_date = st.date_input("Start Date", datetime.today() - timedelta(days=365))
+
+with col2:
     end_date = st.date_input("End Date", datetime.today())
 
-    # Convert dates to string format for yfinance
-    start_date = start_date.strftime('%Y-%m-%d')
-    end_date = end_date.strftime('%Y-%m-%d')
+# Convert dates to string format for yfinance
+start_date = start_date.strftime('%Y-%m-%d')
+end_date = end_date.strftime('%Y-%m-%d')
 
-    st.write("")
-    st.write("")
+st.divider()
 
-    # Factor selection
-    st.subheader("📊 Select Factors")
-    factors = {
-        "Quality": "QUAL",
-        "Value": "VLUE",
-        "Growth": "IWF",
-        "Min Volatility": "USMV",
-        "S&P500": "SPY"
-    }
-    selected_factors = st.multiselect("Choose factors:", factors.keys(), default=factors.keys())
+# 📊 Factor Selection
+st.markdown("### Select Factors")
+st.markdown("""
+- **🏆 Quality (QUAL)** – Invests in financially strong companies that are profitable and stable.  
+- **💰 Value (VLUE)** – Focuses on stocks that are "on sale" compared to their true worth.  
+- **🚀 Growth (IWF)** – Picks companies expected to grow fast, even if they are expensive now.  
+- **🛡️ Min Volatility (USMV)** – Chooses stocks that move less up and down, making investing smoother.  
+""")
+
+factors = {
+    "Quality": "QUAL",
+    "Value": "VLUE",
+    "Growth": "IWF",
+    "Min Volatility": "USMV",
+    "S&P500": "SPY"
+}
+selected_factors = st.multiselect("Choose factors:", factors.keys(), default=factors.keys())
+
+st.divider()
 
 # Fetch data
 data = yf.download(list(factors.values()), start=start_date, end=end_date)['Close']
