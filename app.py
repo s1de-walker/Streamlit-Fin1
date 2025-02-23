@@ -1,5 +1,6 @@
 import yfinance as yf
 import pandas as pd
+import numpy as np
 import streamlit as st
 from datetime import datetime, timedelta
 
@@ -64,12 +65,29 @@ if selected_factors:
     st.line_chart(returns[[factors[f] for f in selected_factors]])
 
 # Calculate summary statistics
+# 1️⃣ Compute daily returns
 daily_returns = data.pct_change()
+
+# 2️⃣ Compute covariance matrix
+cov_matrix = daily_returns.cov()
+
+# 3️⃣ Extract covariance of each factor ETF with SPY
+cov_with_spy = cov_matrix.loc[list(factors.values()), "SPY"]
+
+# 4️⃣ Compute variance of SPY
+spy_variance = daily_returns["SPY"].var()
+
+# 5️⃣ Compute Beta (β) = Cov(X, SPY) / Var(SPY)
+beta_vs_spy = cov_with_spy / spy_variance
+
+
 
 summary_stats = pd.DataFrame({
     "Total Return (%)": returns.iloc[-1] * 100,  # Already annualized
     "Annualized Volatility (%)": daily_returns.std() * (252 ** 0.5) * 100,  # Annualized Volatility
-    "Sharpe Ratio": (returns.iloc[-1] / (daily_returns.std() * (252 ** 0.5))).round(2)  # Corrected Sharpe
+    "Sharpe Ratio": (returns.iloc[-1] / (daily_returns.std() * (252 ** 0.5))).round(2),  # Corrected Sharpe
+    "VaR 95 (%)": daily_returns.quantile(0.05) * 100,  # Compute 5th percentile for each column separately
+    "Beta (vs SPY)": beta_vs_spy  # Adding computed Beta
 }).T
 
 # ✅ Fix: Convert selected_factors (names) to ticker symbols before filtering
@@ -93,6 +111,7 @@ if not filtered_summary_stats.empty:
 
     best_sharpe = filtered_summary_stats.loc["Sharpe Ratio"].idxmax()
     best_sharpe_value = filtered_summary_stats.loc["Sharpe Ratio", best_sharpe]
+
 
     # Mapping ETF tickers back to factor names
     reverse_factors = {v: k for k, v in factors.items()}
@@ -121,7 +140,7 @@ st.write("")
 st.write("")
 st.write("")
 
-st.table(filtered_summary_stats.style.format("{:.1f}"))
+st.dataframe(filtered_summary_stats.style.format("{:.1f}"))
 
 st.write("")
 st.write("")
