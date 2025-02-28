@@ -3,7 +3,7 @@
 
 <img src="sc/appftp.png" alt="Description" width="800">
 
-### This is an app to track various factors in the US markets
+### This app tracks various factors in the US markets
 
 You can select the date range and factors to analyze from the sidebar<br/>
 - Performance: It will display the time series of their performances (annualized returns)
