@@ -1,7 +1,7 @@
 # Factor Performance Tracker
 *First Finance streamlit app*
 
-<img src="sc/fpt_themed.png" alt="Description" width="800">
+<img src="sc/fpt_themed.png" alt="Description" width="1000">
 
 ### This app tracks various factors in the US markets
 
