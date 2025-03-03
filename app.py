@@ -154,3 +154,7 @@ correlation_matrix = returns[[factors[f] for f in selected_factors]].corr().roun
 
 # Format to ensure exactly 2 decimal places
 st.dataframe(correlation_matrix.style.format("{:.2f}"))
+
+st.divider()
+st.subheader("Factor Outperformers in Economic Cycles")
+st.image("sc/multi_factor.jpg")
