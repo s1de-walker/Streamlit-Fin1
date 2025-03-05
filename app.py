@@ -19,6 +19,10 @@ with col1:
 with col2:
     end_date = st.date_input("End Date", datetime.today())
 
+# **Validation Checks**
+if end_date < start_date:
+    st.error("🚨 End Date cannot be earlier than Start Date. Please select a valid range.")
+
 # Convert dates to string format for yfinance
 start_date = start_date.strftime('%Y-%m-%d')
 end_date = end_date.strftime('%Y-%m-%d')
