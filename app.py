@@ -140,7 +140,7 @@ st.write("")
 st.write("")
 st.write("")
 
-st.dataframe(filtered_summary_stats.style.format("{:.1f}"))
+st.dataframe(filtered_summary_stats.T.style.format("{:.1f}"))
 
 st.write("")
 st.write("")
