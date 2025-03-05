@@ -88,7 +88,7 @@ summary_stats = pd.DataFrame({
     "Sharpe Ratio": (returns.iloc[-1] / (daily_returns.std() * (252 ** 0.5))).round(2),  # Corrected Sharpe
     "VaR 95 (%)": daily_returns.quantile(0.05) * 100,  # Compute 5th percentile for each column separately
     "Beta (vs SPY)": beta_vs_spy  # Adding computed Beta
-}).T
+})
 
 # ✅ Fix: Convert selected_factors (names) to ticker symbols before filtering
 filtered_summary_stats = summary_stats[[factors[f] for f in selected_factors]]
