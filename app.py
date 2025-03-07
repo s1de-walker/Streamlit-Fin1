@@ -40,7 +40,8 @@ if not error_flag:
     start_date = start_date.strftime('%Y-%m-%d')
     end_date = end_date.strftime('%Y-%m-%d')
 
-    st.divider()
+    st.write("")
+    st.write("")
 
     # 📊 Factor Selection
     st.markdown("### Select Factors")
