@@ -5,6 +5,7 @@ import streamlit as st
 from datetime import datetime, timedelta
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 
 
 # Streamlit UI
