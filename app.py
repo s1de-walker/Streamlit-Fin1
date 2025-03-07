@@ -73,9 +73,7 @@ if not error_flag:
     # Calculate compounded returns
     returns = data.pct_change().add(1).cumprod() - 1
 
-    st.write("")
-    st.write("")
-
+    
     # Plot performance chart
     if selected_factors:
         st.subheader("Cumulative Performance")
