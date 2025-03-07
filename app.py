@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from datetime import datetime, timedelta
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 # Streamlit UI
 st.title("Factor Performance Tracker")
