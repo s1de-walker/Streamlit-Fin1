@@ -126,7 +126,7 @@ if not error_flag:
     st.subheader("Factor Correlation")
     # Create a custom diverging color palette
     # Create a custom diverging color map
-    colors = ["1b3368", "white", "#7c2f57"]
+    colors = ["#1b3368", "white", "#7c2f57"]
     cmap = LinearSegmentedColormap.from_list("custom_cmap", colors)
     correlation_matrix = returns[[factors[f] for f in selected_factors]].corr().round(2)
     st.dataframe(correlation_matrix.style.format("{:.2f}").background_gradient(cmap=cmap, axis=None, vmin=-1, vmax=1))
