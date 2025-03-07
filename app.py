@@ -120,7 +120,7 @@ if not error_flag:
     # Display correlation matrix
     st.subheader("Factor Correlation")
     correlation_matrix = returns[[factors[f] for f in selected_factors]].corr().round(2)
-    st.dataframe(correlation_matrix.style.format("{:.2f}").background_gradient(cmap='viridis', axis=None, vmin=-1, vmax=1))
+    st.dataframe(correlation_matrix.style.format("{:.2f}").background_gradient(cmap='viridis', axis=None, vmin=1, vmax=-1))
 
     st.divider()
     st.subheader("Factor Outperformers in Economic Cycles")
