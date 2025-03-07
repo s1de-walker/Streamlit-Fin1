@@ -118,9 +118,12 @@ if not error_flag:
     st.dataframe(filtered_summary_stats.T.style.format("{:.1f}"))
     
     # Display correlation matrix
+    
     st.subheader("Factor Correlation")
+    # Create a custom diverging color palette
+    cmap = sns.diverging_palette(250, 10, as_cmap=True)  # 250 for blue, 10 for red
     correlation_matrix = returns[[factors[f] for f in selected_factors]].corr().round(2)
-    st.dataframe(correlation_matrix.style.format("{:.2f}").background_gradient(cmap='viridis', axis=None, vmin=-1, vmax=1))
+    st.dataframe(correlation_matrix.style.format("{:.2f}").background_gradient(cmap=cmap, axis=None, vmin=-1, vmax=1))
 
     st.divider()
     st.subheader("Factor Outperformers in Economic Cycles")
