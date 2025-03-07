@@ -133,4 +133,4 @@ if not error_flag:
 
     st.divider()
     st.subheader("Factor Outperformers in Economic Cycles")
-    st.image("sc/multi_factor.jpg", width = 500)
+    st.image("sc/multi_factor.jpg", width = 1000)
