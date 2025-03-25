@@ -15,13 +15,15 @@ st.divider()
 # 🗓️ Date Selection (Side-by-side)
 st.markdown("### Select Time period for analysis")
 
+default_end = datetime.now().strftime('%Y-%m-%d')
+
 col1, col2 = st.columns(2)
 
 with col1:
     start_date = st.date_input("Start Date", datetime.today() - timedelta(days=365))
 
 with col2:
-    end_date = st.date_input("End Date", datetime.now().strftime('%Y-%m-%d'))
+    end_date = st.date_input("End Date", default_end)
 
 # **Validation Checks**
 error_flag = False  # Flag to control execution
