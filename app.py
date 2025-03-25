@@ -21,7 +21,7 @@ with col1:
     start_date = st.date_input("Start Date", datetime.today() - timedelta(days=365))
 
 with col2:
-    end_date = st.date_input("End Date", datetime.today())
+    end_date = st.date_input("End Date", datetime.now())
 
 # **Validation Checks**
 error_flag = False  # Flag to control execution
