@@ -71,7 +71,7 @@ if not error_flag:
 
     # Fetch data
     selected_tickers = [factors[f] for f in selected_factors]
-    data = yf.download(selected_tickers, start=start_date, end=end_date])['Close']
+    data = yf.download(selected_tickers, start=start_date, end=end_date)['Close']
 
     # Calculate compounded returns
     returns = data.pct_change().add(1).cumprod() - 1
