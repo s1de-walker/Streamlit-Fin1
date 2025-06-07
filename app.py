@@ -81,7 +81,11 @@ if not error_flag:
     # Calculate compounded returns
     returns = data.pct_change().add(1).cumprod() - 1
 
-    
+    # 🔍 Check for missing data
+    missing = [ticker for ticker in selected_tickers if ticker not in returns.columns]
+    if missing:
+        st.warning(f"⚠️ Missing data for: {', '.join(missing)}")
+        
     # Plot performance chart
     if selected_factors:
         st.subheader("Cumulative Performance")
