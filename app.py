@@ -7,6 +7,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
+@st.cache_data(show_spinner=False)
+def get_data(tickers, start, end):
+    return yf.download(tickers, start=start, end=end)['Close']
+    
+# added the above line after imports later
 
 # Streamlit UI
 st.title("Factor Performance Tracker")
@@ -72,7 +77,14 @@ if not error_flag:
     # Fetch data
     selected_tickers = [factors[f] for f in selected_factors]
     tickers_to_download = list(set(selected_tickers + ["SPY"]))
-    data = yf.download(tickers_to_download, start=start_date, end=end_date)['Close']
+    
+    data = get_data(selected_tickers, start=start_date, end=end_date)
+    # Check if any tickers are missing
+    missing = [ticker for ticker in selected_tickers if ticker not in data.columns]
+    if missing:
+        st.warning(f"⚠️ Missing data for: {', '.join(missing)}")
+        st.warning("Try again later")
+
 
     if data.empty:
         st.error("⚠️ No data fetched. Please check the date range or selected factors or try again later!")
