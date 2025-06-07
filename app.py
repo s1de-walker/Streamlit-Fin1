@@ -71,10 +71,11 @@ if not error_flag:
 
     # Fetch data
     selected_tickers = [factors[f] for f in selected_factors]
-    data = yf.download(selected_tickers, start=start_date, end=end_date)['Close']
+    tickers_to_download = list(set(selected_tickers + ["SPY"]))
+    data = yf.download(tickers_to_download, start=start_date, end=end_date)['Close']
 
     if data.empty:
-        st.error("⚠️ No data fetched. Please check the date range or selected factors.")
+        st.error("⚠️ No data fetched. Please check the date range or selected factors or try again later!")
         st.stop()
     
     # Calculate compounded returns
