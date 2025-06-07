@@ -11,53 +11,43 @@ from matplotlib.colors import LinearSegmentedColormap
 def get_data(tickers, start, end):
     return yf.download(tickers, start=start, end=end)['Close']
     
-# added the above line after imports later
-
 # Streamlit UI
 st.title("Factor Performance Tracker")
 st.divider()
 
-# 🗓️ Date Selection (Side-by-side)
+# 🗓️ Date Selection
 st.markdown("### Select Time period for analysis")
 
 default_end = datetime.now().strftime('%Y-%m-%d')
 
 col1, col2 = st.columns(2)
-
 with col1:
     start_date = st.date_input("Start Date", datetime.today() - timedelta(days=730))
-
 with col2:
     end_date = st.date_input("End Date", default_end)
 
-# **Validation Checks**
-error_flag = False  # Flag to control execution
-
+# 🚨 Validation
+error_flag = False
 if end_date < start_date:
-    st.error("🚨 End Date cannot be earlier than Start Date. Please select a valid range.")
+    st.error("🚨 End Date cannot be earlier than Start Date.")
     error_flag = True
-
 if start_date > datetime.today().date() or end_date > datetime.today().date():
-    st.error("🚨 Dates cannot be in the future. Please select a valid range.")
+    st.error("🚨 Dates cannot be in the future.")
     error_flag = True
 
-
-
-# **Run only if there are no errors**
+# ✅ Proceed if no errors
 if not error_flag:
-    
-    # Calculate difference in months
     diff_months = (end_date - start_date).days // 30
     st.markdown(f"📆 **Analysis Period:** {diff_months} months")
-    
-    # Convert dates to string format for yfinance
+
+    # Convert dates to string
     start_date = start_date.strftime('%Y-%m-%d')
     end_date = (end_date + timedelta(days=1)).strftime('%Y-%m-%d')
 
     st.write("")
     st.write("")
 
-    # 📊 Factor Selection
+    # 🎯 Factor Selection
     st.markdown("### Select Factors")
     st.markdown("""
     - **🏆 Quality (QUAL)** – Targets stocks with high ROE, stable earnings, and low debt.
@@ -77,46 +67,43 @@ if not error_flag:
         "Size": "SIZE",
         "S&P500": "SPY"
     }
+
     selected_factors = st.multiselect("Choose factors:", factors.keys(), default=factors.keys())
+    selected_tickers = [factors[f] for f in selected_factors]
+
+    # Always include SPY for beta reference
+    if "SPY" not in selected_tickers:
+        selected_tickers.append("SPY")
 
     st.divider()
 
-    # Fetch data
-    selected_tickers = [factors[f] for f in selected_factors]
-    if "SPY" not in selected_tickers:
-        selected_tickers.append("SPY")  # Ensure SPY is always included
-    
+    # 📥 Fetch data
     data = get_data(selected_tickers, start=start_date, end=end_date)
-    # Check if any tickers are missing
-    
+
+    if data.empty:
+        st.error("⚠️ No data fetched. Check date range or try again later.")
+        st.stop()
+
     missing = [ticker for ticker in selected_tickers if ticker not in data.columns]
     if missing:
         st.warning(f"⚠️ Missing data for: {', '.join(missing)}")
         st.warning("Try again later")
 
-
-    if data.empty:
-        st.error("⚠️ No data fetched. Please check the date range or selected factors or try again later!")
-        st.stop()
-    
-    # Calculate compounded returns
+    # 📈 Compute Returns
     returns = data.pct_change().add(1).cumprod() - 1
+    daily_returns = data.pct_change()
 
-    # 🔍 Check for missing data
-    missing = [ticker for ticker in selected_tickers if ticker not in returns.columns]
-    if missing:
-        st.warning(f"⚠️ Missing data for: {', '.join(missing)}")
-        
-    # Plot performance chart
+    # 🎨 Plot Performance
+    user_selected_only = [factors[f] for f in selected_factors if f != "S&P500"]
+
     if selected_factors:
         st.subheader("Cumulative Performance")
-        st.line_chart(returns[[factors[f] for f in selected_factors]])
+        st.line_chart(returns[user_selected_only])
 
-    # Calculate summary statistics
-    daily_returns = data.pct_change()
+    # 📊 Summary Stats
     cov_matrix = daily_returns.cov()
-    # 🧮 Covariance with SPY
-    cov_matrix = daily_returns.cov()
+    available_tickers = [t for t in selected_tickers if t in daily_returns.columns]
+
     if "SPY" in cov_matrix.columns:
         cov_with_spy = cov_matrix.loc[available_tickers, "SPY"]
         spy_variance = daily_returns["SPY"].var()
@@ -135,42 +122,37 @@ if not error_flag:
         "Beta (vs SPY)": beta_vs_spy
     }).T
 
-    filtered_summary_stats = summary_stats[[factors[f] for f in selected_factors]]
-
-    # Display Metrics in Columns
+    filtered_summary_stats = summary_stats[user_selected_only]
     reverse_factors = {v: k for k, v in factors.items()}
 
     if not filtered_summary_stats.empty:
         st.subheader("Factor Summary")
 
         best_performer = filtered_summary_stats.loc["Total Return (%)"].idxmax()
-        best_performer_value = filtered_summary_stats.loc["Total Return (%)", best_performer]
-
         most_volatile = filtered_summary_stats.loc["Annualized Volatility (%)"].idxmax()
-        most_volatile_value = filtered_summary_stats.loc["Annualized Volatility (%)", most_volatile]
-
         best_sharpe = filtered_summary_stats.loc["Sharpe Ratio"].idxmax()
-        best_sharpe_value = filtered_summary_stats.loc["Sharpe Ratio", best_sharpe]
 
         col1, col2, col3 = st.columns(3)
-
-        col1.metric("🚀 Highest Return Factor", f"{reverse_factors.get(best_performer, best_performer)}", f"{best_performer_value:.0f}%")
-        col2.metric("⚡ Most Volatile Factor", f"{reverse_factors.get(most_volatile, most_volatile)}", f"{most_volatile_value:.0f}%")
-        col3.metric("🎯 Best Sharpe Ratio", f"{reverse_factors.get(best_sharpe, best_sharpe)}", f"{best_sharpe_value:.1f}")
+        col1.metric("🚀 Highest Return Factor", reverse_factors.get(best_performer, best_performer),
+                    f"{filtered_summary_stats.loc['Total Return (%)', best_performer]:.0f}%")
+        col2.metric("⚡ Most Volatile Factor", reverse_factors.get(most_volatile, most_volatile),
+                    f"{filtered_summary_stats.loc['Annualized Volatility (%)', most_volatile]:.0f}%")
+        col3.metric("🎯 Best Sharpe Ratio", reverse_factors.get(best_sharpe, best_sharpe),
+                    f"{filtered_summary_stats.loc['Sharpe Ratio', best_sharpe]:.1f}")
 
     st.write("")
     st.dataframe(filtered_summary_stats.T.style.format("{:.1f}"))
-    
-    # Display correlation matrix
-    
+
+    # 🔗 Correlation Matrix
     st.subheader("Factor Correlation")
-    # Create a custom diverging color palette
-    # Create a custom diverging color map
     colors = ["#1b3368", "white", "#7c2f57"]
     cmap = LinearSegmentedColormap.from_list("custom_cmap", colors)
-    correlation_matrix = returns[[factors[f] for f in selected_factors]].corr().round(2)
-    st.dataframe(correlation_matrix.style.format("{:.2f}").background_gradient(cmap=cmap, axis=None, vmin=-1, vmax=1))
+
+    correlation_matrix = returns[user_selected_only].corr().round(2)
+    st.dataframe(
+        correlation_matrix.style.format("{:.2f}").background_gradient(cmap=cmap, axis=None, vmin=-1, vmax=1)
+    )
 
     st.divider()
     st.subheader("Factor Outperformers in Economic Cycles")
-    st.image("sc/multi_factor.jpg", width = 1000)
+    st.image("sc/multi_factor.jpg", width=1000)
