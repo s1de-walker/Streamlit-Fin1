@@ -83,7 +83,8 @@ if not error_flag:
 
     # Fetch data
     selected_tickers = [factors[f] for f in selected_factors]
-    tickers_to_download = list(set(selected_tickers + ["SPY"]))
+    if "SPY" not in selected_tickers:
+        selected_tickers.append("SPY")  # Ensure SPY is always included
     
     data = get_data(selected_tickers, start=start_date, end=end_date)
     # Check if any tickers are missing
