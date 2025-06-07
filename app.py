@@ -80,6 +80,7 @@ if not error_flag:
     
     data = get_data(selected_tickers, start=start_date, end=end_date)
     # Check if any tickers are missing
+    
     missing = [ticker for ticker in selected_tickers if ticker not in data.columns]
     if missing:
         st.warning(f"⚠️ Missing data for: {', '.join(missing)}")
