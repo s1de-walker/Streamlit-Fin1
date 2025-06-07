@@ -73,6 +73,10 @@ if not error_flag:
     selected_tickers = [factors[f] for f in selected_factors]
     data = yf.download(selected_tickers, start=start_date, end=end_date)['Close']
 
+    if data.empty:
+    st.error("⚠️ No data fetched. Please check the date range or selected factors.")
+    st.stop()
+    
     # Calculate compounded returns
     returns = data.pct_change().add(1).cumprod() - 1
 
