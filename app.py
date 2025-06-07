@@ -41,8 +41,12 @@ if start_date > datetime.today().date() or end_date > datetime.today().date():
     st.error("🚨 Dates cannot be in the future. Please select a valid range.")
     error_flag = True
 
+
+
 # **Run only if there are no errors**
 if not error_flag:
+    diff_months = (end_date - datetime.strptime(start_date, '%Y-%m-%d').date()).days // 30
+    st.markdown(f"📆 **Analysis Period:** {diff_months} months")
     # Convert dates to string format for yfinance
     start_date = start_date.strftime('%Y-%m-%d')
     end_date = (end_date + timedelta(days=1)).strftime('%Y-%m-%d')
