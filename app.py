@@ -114,7 +114,13 @@ if not error_flag:
     # Calculate summary statistics
     daily_returns = data.pct_change()
     cov_matrix = daily_returns.cov()
-    cov_with_spy = cov_matrix.loc[list(factors.values()), "SPY"]
+    # Check if SPY is in selected tickers before accessing
+    if "SPY" in cov_matrix.columns:
+        cov_with_spy = cov_matrix.loc[list(factors.values()), "SPY"]
+        st.write("📈 Covariance with SPY:")
+        st.dataframe(cov_with_spy)
+    else:
+        st.warning("⚠️ SPY not selected — covariance with SPY cannot be computed.")
     spy_variance = daily_returns["SPY"].var()
     beta_vs_spy = cov_with_spy / spy_variance
 
