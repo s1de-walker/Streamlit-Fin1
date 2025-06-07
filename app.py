@@ -108,8 +108,7 @@ if not error_flag:
         cov_with_spy = cov_matrix.loc[available_tickers, "SPY"]
         spy_variance = daily_returns["SPY"].var()
         beta_vs_spy = cov_with_spy / spy_variance
-        st.write("📈 Covariance with SPY:")
-        st.dataframe(cov_with_spy)
+        
     else:
         beta_vs_spy = pd.Series(index=available_tickers, data=np.nan)
         st.warning("⚠️ SPY data unavailable — beta cannot be computed.")
